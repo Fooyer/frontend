@@ -247,73 +247,43 @@ export default function Home() {
       {/* Hero */}
       <section className="hero">
         <div className="hero-inner">
-          <span className="hero-badge">100% gratuito</span>
-          <h1>Nunca mais erre no presente</h1>
+          <h1>Encontre o presente ideal</h1>
           <p className="hero-sub">
-            Responda 5 perguntas rápidas e nossa IA encontra o presente perfeito
-            para qualquer pessoa, qualquer ocasião.
+            Nossa IA encontra sugestões perfeitas em segundos.
           </p>
-          <button className="btn-cta" onClick={startForm}>
-            Encontrar o presente ideal
-          </button>
-          <div className="hero-trust">
-            <span>Sem cadastro</span>
-            <span className="dot" />
-            <span>Resultado em segundos</span>
-            <span className="dot" />
-            <span>Compra direto na Amazon</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Como funciona */}
-      <section className="section how-it-works">
-        <h2 className="section-title">Como funciona</h2>
-        <div className="steps-row">
-          <div className="step-card">
-            <div className="step-icon">1</div>
-            <h3>Conte sobre a pessoa</h3>
-            <p>Quem é, o que gosta, a idade e a ocasião. Quanto mais detalhes, melhor a sugestão.</p>
-          </div>
-          <div className="step-card">
-            <div className="step-icon">2</div>
-            <h3>A IA analisa o perfil</h3>
-            <p>Nossa inteligência artificial cruza personalidade, hobbies e orçamento para achar presentes únicos.</p>
-          </div>
-          <div className="step-card">
-            <div className="step-icon">3</div>
-            <h3>Escolha e compre</h3>
-            <p>Receba 5 sugestões com link direto para comprar na Amazon, além de uma mensagem pronta para o cartão.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Prova social */}
-      <section className="section testimonials">
-        <h2 className="section-title">Quem usou, aprovou</h2>
-        <div className="testimonials-row">
-          {DEPOIMENTOS.map((d, i) => (
-            <div className="testimonial-card" key={i}>
-              <p className="testimonial-text">"{d.texto}"</p>
-              <div className="testimonial-author">
-                <span className="testimonial-avatar">{d.nome.charAt(0)}</span>
-                <div>
-                  <strong>{d.nome}</strong>
-                  <span className="testimonial-ocasiao">{d.ocasiao}</span>
-                </div>
-              </div>
+          
+          <div className="hero-cta-area">
+            <label htmlFor="quem-input">{STEPS[0].label}</label>
+            <div className="hero-input-group">
+              <input
+                id="quem-input"
+                name="quem"
+                type="text"
+                placeholder={STEPS[0].placeholder}
+                value={form.quem}
+                onChange={handleChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && form.quem.trim()) {
+                    setStep(1);
+                  }
+                }}
+                autoFocus
+              />
+              <button 
+                className="btn-cta" 
+                onClick={() => {
+                  if (form.quem.trim()) {
+                    setStep(1);
+                  } else {
+                    document.getElementById('quem-input').focus();
+                  }
+                }}
+              >
+                Continuar
+              </button>
             </div>
-          ))}
+          </div>
         </div>
-      </section>
-
-      {/* CTA final */}
-      <section className="section cta-final">
-        <h2>Pronto para surpreender alguém?</h2>
-        <p className="muted">Leva menos de 30 segundos. Sem cadastro, sem pegadinha.</p>
-        <button className="btn-cta" onClick={startForm}>
-          Começar agora
-        </button>
       </section>
 
       <Footer />
