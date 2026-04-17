@@ -1,33 +1,83 @@
-import { useState } from 'react';
-import { usePresente } from '../hooks/usePresente.js';
-import './Home.css';
+import { useState } from "react";
+import { usePresente } from "../hooks/usePresente.js";
+import "./Home.css";
 
 const OCASIOES = [
-  'Aniversário', 'Natal', 'Dia das Mães', 'Dia dos Pais',
-  'Dia dos Namorados', 'Casamento', 'Formatura', 'Amigo Secreto',
-  'Chá de Bebê', 'Sem ocasião especial',
+  "Aniversário",
+  "Natal",
+  "Dia das Mães",
+  "Dia dos Pais",
+  "Dia dos Namorados",
+  "Casamento",
+  "Formatura",
+  "Amigo Secreto",
+  "Chá de Bebê",
+  "Sem ocasião especial",
 ];
 
 const STEPS = [
-  { field: 'quem', label: 'Para quem é o presente?', placeholder: 'ex: minha mãe, meu melhor amigo...', type: 'text' },
-  { field: 'idade', label: 'Qual a idade da pessoa?', placeholder: 'ex: 45', type: 'number', min: 1, max: 120 },
-  { field: 'personalidade', label: 'Como é essa pessoa? O que ela gosta?', placeholder: 'ex: adora cozinhar, é caseira, gosta de séries e café...', type: 'textarea' },
-  { field: 'ocasiao', label: 'Qual a ocasião?', type: 'select', options: OCASIOES },
-  { field: 'orcamento', label: 'Quanto quer gastar? (R$)', placeholder: 'ex: 150', type: 'number', min: 10 },
+  {
+    field: "quem",
+    label: "Para quem é o presente?",
+    placeholder: "ex: minha mãe, meu melhor amigo...",
+    type: "text",
+  },
+  {
+    field: "idade",
+    label: "Qual a idade da pessoa?",
+    placeholder: "ex: 45",
+    type: "number",
+    min: 1,
+    max: 120,
+  },
+  {
+    field: "personalidade",
+    label: "Como é essa pessoa? O que ela gosta?",
+    placeholder: "ex: adora cozinhar, é caseira, gosta de séries e café...",
+    type: "textarea",
+  },
+  {
+    field: "ocasiao",
+    label: "Qual a ocasião?",
+    type: "select",
+    options: OCASIOES,
+  },
+  {
+    field: "orcamento",
+    label: "Quanto quer gastar? (R$)",
+    placeholder: "ex: 150",
+    type: "number",
+    min: 10,
+  },
 ];
 
 const initialForm = {
-  quem: '',
-  idade: '',
-  personalidade: '',
-  ocasiao: 'Aniversário',
-  orcamento: '',
+  quem: "",
+  idade: "",
+  personalidade: "",
+  ocasiao: "Aniversário",
+  orcamento: "",
 };
 
 const DEPOIMENTOS = [
-  { nome: 'Camila R.', texto: 'Usei para o aniversário da minha mãe e ela amou o presente! Nunca teria pensado naquilo sozinha.', ocasiao: 'Dia das Mães' },
-  { nome: 'Lucas M.', texto: 'Sempre sofria com amigo secreto. Em 30 segundos o site me deu a ideia perfeita.', ocasiao: 'Amigo Secreto' },
-  { nome: 'Fernanda S.', texto: 'A mensagem do cartão ficou tão bonita que meu namorado chorou. Recomendo demais!', ocasiao: 'Dia dos Namorados' },
+  {
+    nome: "Camila R.",
+    texto:
+      "Usei para o aniversário da minha mãe e ela amou o presente! Nunca teria pensado naquilo sozinha.",
+    ocasiao: "Dia das Mães",
+  },
+  {
+    nome: "Lucas M.",
+    texto:
+      "Sempre sofria com amigo secreto. Em 30 segundos o site me deu a ideia perfeita.",
+    ocasiao: "Amigo Secreto",
+  },
+  {
+    nome: "Fernanda S.",
+    texto:
+      "A mensagem do cartão ficou tão bonita que meu namorado chorou. Recomendo demais!",
+    ocasiao: "Dia dos Namorados",
+  },
 ];
 
 export default function Home() {
@@ -44,15 +94,25 @@ export default function Home() {
     if (step < 0) return false;
     const { field, type } = STEPS[step];
     const val = form[field];
-    if (type === 'select') return true;
-    return val !== '' && val !== undefined;
+    if (type === "select") return true;
+    return val !== "" && val !== undefined;
   }
 
   function nextStep() {
+    ReactGA.event({
+      category: "Interação",
+      action: "Avanço de fase",
+      label: STEPS[step]?.label || "",
+    });
     if (step < STEPS.length - 1) setStep(step + 1);
   }
 
   function prevStep() {
+    ReactGA.event({
+      category: "Interação",
+      action: "Recuo de fase",
+      label: STEPS[step]?.label || "",
+    });
     if (step > 0) setStep(step - 1);
   }
 
@@ -77,7 +137,7 @@ export default function Home() {
   }
 
   function handleKeyDown(e) {
-    if (e.key === 'Enter' && step >= 0 && STEPS[step].type !== 'textarea') {
+    if (e.key === "Enter" && step >= 0 && STEPS[step].type !== "textarea") {
       e.preventDefault();
       if (step < STEPS.length - 1 && canAdvance()) {
         nextStep();
@@ -100,7 +160,9 @@ export default function Home() {
         <div className="loading-state">
           <div className="gift-spinner" />
           <h2>Buscando os presentes perfeitos...</h2>
-          <p className="muted">A IA está analisando o perfil e escolhendo sugestões personalizadas</p>
+          <p className="muted">
+            A IA está analisando o perfil e escolhendo sugestões personalizadas
+          </p>
           <div className="loading-tips">
             <span>Isso leva apenas alguns segundos</span>
           </div>
@@ -116,7 +178,9 @@ export default function Home() {
         <header className="results-header">
           <span className="badge">5 sugestões para {form.quem}</span>
           <h1>Presentes encontrados!</h1>
-          <p className="muted">Clique em "Ver na Amazon" para comprar com o melhor preço</p>
+          <p className="muted">
+            Clique em "Ver na Amazon" para comprar com o melhor preço
+          </p>
         </header>
 
         <div className="grid">
@@ -125,14 +189,21 @@ export default function Home() {
               <div className="card-top">
                 <span className="card-number">{i + 1}</span>
                 <span className="categoria">{s.categoria}</span>
-                {s.tipo === 'experiencia' && <span className="tag-exp">Experiência</span>}
+                {s.tipo === "experiencia" && (
+                  <span className="tag-exp">Experiência</span>
+                )}
               </div>
               <h3>{s.titulo}</h3>
               <p className="card-desc">{s.descricao}</p>
               <div className="card-footer">
                 <strong className="preco">{s.faixaPreco}</strong>
-                <a href={s.linkBusca} target="_blank" rel="noreferrer" className={`btn-buscar ${s.tipo === 'experiencia' ? 'btn-exp' : ''}`}>
-                  {s.tipo === 'experiencia' ? 'Saiba mais' : 'Ver na Amazon'}
+                <a
+                  href={s.linkBusca}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`btn-buscar ${s.tipo === "experiencia" ? "btn-exp" : ""}`}
+                >
+                  {s.tipo === "experiencia" ? "Saiba mais" : "Ver na Amazon"}
                 </a>
               </div>
             </div>
@@ -148,7 +219,7 @@ export default function Home() {
               className="btn-copy"
               onClick={() => handleCopy(resultado.mensagemCartao)}
             >
-              {copied ? 'Copiada!' : 'Copiar mensagem'}
+              {copied ? "Copiada!" : "Copiar mensagem"}
             </button>
           </div>
         )}
@@ -157,7 +228,10 @@ export default function Home() {
           <button className="btn-secondary" onClick={handleReset}>
             Buscar outros presentes
           </button>
-          <button className="btn-share" onClick={() => handleCopy(window.location.href)}>
+          <button
+            className="btn-share"
+            onClick={() => handleCopy(window.location.href)}
+          >
             Compartilhar site
           </button>
         </div>
@@ -175,29 +249,37 @@ export default function Home() {
 
     return (
       <div className="container center-content">
-        <form className="form" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+        <form
+          className="form"
+          onSubmit={handleSubmit}
+          onKeyDown={handleKeyDown}
+        >
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: `${progress}%` }} />
           </div>
-          <span className="step-counter">Pergunta {step + 1} de {STEPS.length}</span>
+          <span className="step-counter">
+            Pergunta {step + 1} de {STEPS.length}
+          </span>
 
           <div className="step-content">
             <label className="step-label">{currentStep.label}</label>
 
-            {currentStep.type === 'select' ? (
+            {currentStep.type === "select" ? (
               <div className="options-grid">
                 {currentStep.options.map((o) => (
                   <button
                     type="button"
                     key={o}
-                    className={`option-btn ${form[currentStep.field] === o ? 'option-active' : ''}`}
-                    onClick={() => setForm((prev) => ({ ...prev, [currentStep.field]: o }))}
+                    className={`option-btn ${form[currentStep.field] === o ? "option-active" : ""}`}
+                    onClick={() =>
+                      setForm((prev) => ({ ...prev, [currentStep.field]: o }))
+                    }
                   >
                     {o}
                   </button>
                 ))}
               </div>
-            ) : currentStep.type === 'textarea' ? (
+            ) : currentStep.type === "textarea" ? (
               <textarea
                 name={currentStep.field}
                 placeholder={currentStep.placeholder}
@@ -223,15 +305,28 @@ export default function Home() {
           {error && <p className="error">{error}</p>}
 
           <div className="step-actions">
-            <button type="button" className="btn-back" onClick={step === 0 ? handleReset : prevStep}>
+            <button
+              type="button"
+              className="btn-back"
+              onClick={step === 0 ? handleReset : prevStep}
+            >
               Voltar
             </button>
             {isLast ? (
-              <button className="btn-primary" type="submit" disabled={!canAdvance()}>
+              <button
+                className="btn-primary"
+                type="submit"
+                disabled={!canAdvance()}
+              >
                 Encontrar presentes
               </button>
             ) : (
-              <button type="button" className="btn-primary" onClick={nextStep} disabled={!canAdvance()}>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={nextStep}
+                disabled={!canAdvance()}
+              >
                 Continuar
               </button>
             )}
@@ -251,7 +346,7 @@ export default function Home() {
           <p className="hero-sub">
             Nossa IA encontra sugestões perfeitas em segundos.
           </p>
-          
+
           <div className="hero-cta-area">
             <label htmlFor="quem-input">{STEPS[0].label}</label>
             <div className="hero-input-group">
@@ -263,19 +358,19 @@ export default function Home() {
                 value={form.quem}
                 onChange={handleChange}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && form.quem.trim()) {
+                  if (e.key === "Enter" && form.quem.trim()) {
                     setStep(1);
                   }
                 }}
                 autoFocus
               />
-              <button 
-                className="btn-cta" 
+              <button
+                className="btn-cta"
                 onClick={() => {
                   if (form.quem.trim()) {
                     setStep(1);
                   } else {
-                    document.getElementById('quem-input').focus();
+                    document.getElementById("quem-input").focus();
                   }
                 }}
               >
@@ -294,11 +389,10 @@ export default function Home() {
 function Footer() {
   return (
     <footer className="footer">
-      <p>
-        PresentePerfeito &mdash; Sugestões inteligentes de presente com IA
-      </p>
+      <p>PresentePerfeito &mdash; Sugestões inteligentes de presente com IA</p>
       <p className="footer-sub">
-        Links de compra direcionam para a Amazon. Como associados Amazon, podemos ganhar comissões por compras qualificadas.
+        Links de compra direcionam para a Amazon. Como associados Amazon,
+        podemos ganhar comissões por compras qualificadas.
       </p>
     </footer>
   );
