@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { usePresente } from "../hooks/usePresente.js";
 import "./Home.css";
+import ReactGA from "react-ga4";
 
 const OCASIOES = [
   "Aniversário",
